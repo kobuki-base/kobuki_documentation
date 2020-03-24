@@ -94,9 +94,6 @@ fi
 # we have to restrict versions because of bleeding edge incompatibilities
 pip install -r rtd-requirements.txt
 
-pip install -e .[test]
-pip install -e .[debs]
-
 # NB: this automagically nabs install_requires
 python setup.py develop
 
