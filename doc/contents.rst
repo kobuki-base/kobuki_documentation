@@ -3,7 +3,7 @@
    :maxdepth: 1
    :caption: Guide
 
-   background
+   building_from_source.rst
 
 .. toctree::
    :maxdepth: 1
