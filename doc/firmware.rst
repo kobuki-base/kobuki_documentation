@@ -234,7 +234,7 @@ Random Walker Mode
 
 In random walker mode Kobuki is driving around until it hits an object with the bumper or a cliff is detected. In both cases, Kobuki will stop, turn by a random amount of degrees and continue driving .
 
-.. NOTE:: In this mode Kobuki’s wheel drop sensors are not activated. So, be careful when lifting up Kobuki!
+.. WARNING:: In this mode Kobuki’s wheel drop sensors are not activated. So, be careful when lifting up Kobuki!
 
 Arduino / Embedded Board Support Mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
