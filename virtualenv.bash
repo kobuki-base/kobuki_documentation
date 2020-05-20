@@ -68,6 +68,12 @@ install_package ()
 
 ##############################################################################
 
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] && SOURCED=1
+if [ -z "$SOURCED" ]; then
+  pretty_error "This script needs to be sourced, i.e. source './virtualenv.bash', not './virtualenv.bash'"
+  exit 1
+fi
+
 install_package virtualenvwrapper || return
 install_package kcachegrind || return
 
@@ -92,7 +98,7 @@ fi
 
 # pip install -e .[docs]
 # we have to restrict versions because of bleeding edge incompatibilities
-pip install -r rtd-requirements.txt
+pip install -r doc/requirements.txt
 
 # NB: this automagically nabs install_requires
 python setup.py develop

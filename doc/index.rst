@@ -24,4 +24,16 @@ Kobuki Team.
 Contents
 ========
 
-.. include:: contents.rst
+.. toctree::
+   :maxdepth: 1
+   :caption: Guide
+
+   building_from_source.rst
+   firmware.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Reference
+
+   changelog
+   glossary
