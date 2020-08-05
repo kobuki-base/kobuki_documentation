@@ -26,14 +26,34 @@ Contents
 
 .. toctree::
    :maxdepth: 1
-   :caption: Guide
+   :caption: Kobuki
 
-   building_from_source.rst
-   firmware.rst
+   basic_usage
+   software
+   anatomy
+   firmware
+   specifications
+   resources
+   changelog
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Advanced Kobuki
+
+   docking
+   custom_drivers
+   embedded_boards
+   hardware_extensions
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Kobuki in ROS
+
+   ros_installation
+   ros_other
 
 .. toctree::
    :maxdepth: 1
    :caption: Reference
 
-   changelog
    glossary
