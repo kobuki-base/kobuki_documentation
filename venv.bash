@@ -1,48 +1,45 @@
 #!/bin/bash
 
-# Script for setting up the development environment.
-#source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+# Script for setting up an environment to build the documentation.
 
 NAME=kobuki_documentation
+
+##############################################################################
+# Directories
+##############################################################################
+
+SRC_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+VENV_DIR=${SRC_DIR}/.venv
 
 ##############################################################################
 # Colours
 ##############################################################################
 
 BOLD="\e[1m"
-
 CYAN="\e[36m"
 GREEN="\e[32m"
 RED="\e[31m"
 YELLOW="\e[33m"
-
 RESET="\e[0m"
 
-padded_message ()
-{
+padded_message () {
   line="........................................"
   printf "%s %s${2}\n" ${1} "${line:${#1}}"
 }
 
-pretty_header ()
-{
+pretty_header () {
   echo -e "${BOLD}${1}${RESET}"
 }
-
-pretty_print ()
-{
+pretty_print () {
   echo -e "${GREEN}${1}${RESET}"
 }
-
-pretty_warning ()
-{
+pretty_warning () {
   echo -e "${YELLOW}${1}${RESET}"
 }
-
-pretty_error ()
-{
+pretty_error () {
   echo -e "${RED}${1}${RESET}"
 }
+
 
 ##############################################################################
 # Methods
@@ -68,36 +65,45 @@ install_package ()
 
 ##############################################################################
 
+
+#############################
+# Checks
+#############################
+
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && SOURCED=1
 if [ -z "$SOURCED" ]; then
-  pretty_error "This script needs to be sourced, i.e. source './virtualenv.bash', not './virtualenv.bash'"
+  pretty_error "This script needs to be sourced, i.e. source './setup.bash', not './setup.bash'"
   exit 1
 fi
 
-install_package virtualenvwrapper || return
-install_package kcachegrind || return
+#############################
+# System Dependencies
+#############################
 
-# To use the installed python3
-VERSION="--python=/usr/bin/python3"
-# To use a specific version
-# VERSION="--python=python3.6"
+# install_package kcachegrind || return
 
-if [ "${VIRTUAL_ENV}" == "" ]; then
-  workon ${NAME}
-  result=$?
-  if [ $result -eq 1 ]; then
-    mkvirtualenv ${VERSION} ${NAME}
-  fi
-  if [ $result -eq 127 ]; then
-    pretty_error "Failed to find virtualenvwrapper aliases: 1) re-log or 2) source virtualenvwrapper.sh in your shell's .rc"
-    return 1
-  fi
+#############################
+# Virtual Env
+#############################
+
+pretty_header "Virtual Environment"
+
+if [ -x ${VENV_DIR}/bin/pip3 ]; then
+    pretty_print "  $(padded_message "virtual_environment" "found [${VENV_DIR}]")"
+else
+    python3 -m venv ${VENV_DIR}
+    pretty_warning "  $(padded_message "virtual_environment" "created [${VENV_DIR}]")"
 fi
 
-# Get all dependencies for testing, doc generation
+source ${VENV_DIR}/bin/activate
 
-# pip install -e .[docs]
-# we have to restrict versions because of bleeding edge incompatibilities
+#############################
+# Pypi Dependencies
+#############################
+
+pretty_header "PyPi Dependencies"
+
+# restrict versions because of bleeding edge incompatibilities on rtd
 pip install -r doc/requirements.txt
 
 # NB: this automagically nabs install_requires
@@ -108,4 +114,3 @@ echo "Leave the virtual environment with 'deactivate'"
 echo ""
 echo "I'm grooty, you should be too."
 echo ""
-
