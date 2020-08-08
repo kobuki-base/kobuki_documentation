@@ -28,12 +28,17 @@ Contents
    :maxdepth: 1
    :caption: Kobuki
 
-   basic_usage
+   out_of_the_box
    software
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Kobuki Resources
+
    anatomy
-   firmware
    specifications
-   resources
+   firmware
+   media
    changelog
 
 .. toctree::
@@ -41,9 +46,9 @@ Contents
    :caption: Advanced Kobuki
 
    docking
-   custom_drivers
    embedded_boards
    hardware_extensions
+   custom_drivers
 
 .. toctree::
    :maxdepth: 1
