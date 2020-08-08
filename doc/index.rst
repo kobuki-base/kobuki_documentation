@@ -30,6 +30,7 @@ Contents
 
    out_of_the_box
    software
+   applications
 
 .. toctree::
    :maxdepth: 1
@@ -39,7 +40,6 @@ Contents
    specifications
    firmware
    media
-   changelog
 
 .. toctree::
    :maxdepth: 1
@@ -52,13 +52,21 @@ Contents
 
 .. toctree::
    :maxdepth: 1
-   :caption: Kobuki in ROS
+   :caption: Kobuki in ROS1
 
-   ros_installation
-   ros_other
+   ros1_documentation
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Kobuki in ROS2
+
+   ros2_installation
+   ros2_other
 
 .. toctree::
    :maxdepth: 1
    :caption: Reference
 
+   doxygen
+   changelog
    glossary

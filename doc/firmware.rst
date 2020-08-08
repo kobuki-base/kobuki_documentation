@@ -9,14 +9,6 @@ Communication
 - Baud rate: 115200 BPS, Data bit: 8 bit, Stop bit: 1 bit, No Parity
 - Electronic protocol: USB / RS232 (@ DB25 connector)
 
-Protocol
---------
-
-The driver communicates with the robot via a predefined protocol. For
-more detailed information, visit:
-
-- http://yujinrobot.github.com/kobuki/enAppendixProtocolSpecification.html
-
 Versioning
 ----------
 
@@ -56,6 +48,8 @@ in the kobuki firmware `CHANGELOG <https://github.com/kobuki-base/kobuki_firmwar
 .. _kobuki_firmware: https://github.com/kobuki-base/kobuki_firmware/tree/devel/firmware
 .. _c++ driver: https://github.com/kobuki-base/kobuki_core
 .. _semantic versioning: https://semver.org/
+
+.. _updating-firmware:
 
 Updating Firmware
 -----------------
