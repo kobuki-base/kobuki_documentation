@@ -1,8 +1,9 @@
-=========
-Changelog
-=========
+=======================
+Documentation Changelog
+=======================
 
 Forthcoming
 -----------
-* [infra] virtual environment for building the documentation
+
+* [docs] installing and running the software
 * [infra] skeleton sphinx pages assembled
