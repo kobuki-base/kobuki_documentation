@@ -9,7 +9,7 @@ Sphinx documentation for kobuki. These docs eventually land on read-the-docs.
 
 ## Developer Notes
 
-Testing actions 1
+Testing actions 1 2
 
 ```
 . ./venv.bash
