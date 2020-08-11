@@ -2,6 +2,7 @@
 name: build_sources
 
 on:
+  workflow_dispatch:
   schedule:
     # run at 4 AM UTC / Midnight Boston time
     - cron: '0 4 * * *'
