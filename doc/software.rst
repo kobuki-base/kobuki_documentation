@@ -78,16 +78,16 @@ Build
    $ source ./venv.bash
 
    # build everything
-   $ colcon build -merge-install --cmake-args -DBUILD_TESTING=OFF
+   $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF
 
    # build a single package
-   $ colcon build -merge-install --cmake-args -DBUILD_TESTING=OFF --package-select kobuki_dock_drive
+   $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF --package-select kobuki_dock_drive
    
    # build everything, verbosely
-   $ VERBOSE=1 colcon build -merge-install --event-handlers console_direct+ -DBUILD_TESTING=OFF
+   $ VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ -DBUILD_TESTING=OFF
 
    # build release with debug symbols
-   $ colcon build -merge-install --cmake-args -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo
+   $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
    # update the source workspace
    $ vcs pull ./src
