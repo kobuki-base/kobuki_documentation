@@ -1,0 +1,56 @@
+
+name: build_sources
+
+on:
+  schedule:
+    # run at 4 AM UTC / Midnight Boston time
+    - cron: '0 4 * * *'
+
+jobs:
+  bionic:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    # - uses: actions/checkout@v2
+
+    - name: devel
+      run: |
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/venv.bash || exit 1
+        cat venv.bash
+        echo "---------------------------------------------------------------------------"
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/colcon.meta || exit 1
+        cat colcon.meta
+        echo "---------------------------------------------------------------------------"
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/kobuki_standalone.repos || exit 1
+        cat kobuki_standalone.repos
+        echo "---------------------------------------------------------------------------"
+        sudo apt install python3-venv
+        sudo apt install cmake
+        source venv.bash
+        mkdir src
+        vcs import ./src < kobuki_standalone.repos || exit 1
+        VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
+        deactivate
+
+    - name: release/1.0.x
+      run: |
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/venv.bash || exit 1
+        cat venv.bash
+        echo "---------------------------------------------------------------------------"
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/colcon.meta || exit 1
+        cat colcon.meta
+        echo "---------------------------------------------------------------------------"
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/kobuki_standalone.repos || exit 1
+        cat kobuki_standalone.repos
+        echo "---------------------------------------------------------------------------"
+        sudo apt install python3-venv
+        sudo apt install cmake
+        source venv.bash
+        mkdir src
+        vcs import ./src < kobuki_standalone.repos || exit 1
+        VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
+        deactivate
+

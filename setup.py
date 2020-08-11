@@ -6,7 +6,12 @@ from setuptools import find_packages, setup
 # Make sure to update them both.
 d = setup(
     name='kobuki_documentation',
-    version='1.0.0',  # also update package.xml and version.py
+    # update package.xml, setup.py, conf.py
+    # if it's a minor/major update
+    #   - update source build wget branch in software.rst
+    #   - update the build_sources workflow
+    #   - create a new release branch
+    version='1.0.0',
     packages=find_packages(exclude=['tests*', 'docs*']),
     author='Daniel Stonier',
     maintainer='Daniel Stonier <d.stonier@gmail.com>',
