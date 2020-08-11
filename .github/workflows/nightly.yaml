@@ -36,6 +36,11 @@ jobs:
         VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
         deactivate
 
+    - name: cleanup
+      run: |
+        rm venv.bash kobuki_standalone.repos colcon.meta
+        rm -rf .venv src build install log
+
     - name: release/1.0.x
       run: |
         wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/venv.bash || exit 1
