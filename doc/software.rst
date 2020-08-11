@@ -32,7 +32,7 @@ Ensure your system has the following packages installed:
 * GCC (>=9)
 * CMake (>=3.5)
 * wget
-* python-dev (for venv)
+* python3-venv
 
 Download a few scripts that will help setup your workspace.
 
