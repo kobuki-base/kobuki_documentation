@@ -41,13 +41,13 @@ Download a few scripts that will help setup your workspace.
    $ mkdir kobuki && cd kobuki
    
    # a virtual environment launcher that will fetch build tools from pypi (colcon, vcstools)
-   $ wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/venv.bash || exit 1
+   $ wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/venv.bash || exit 1
    
    # custom build configuration options for eigen, sophus
-   $ wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/colcon.meta || exit 1
+   $ wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/colcon.meta || exit 1
    
    # list of repositories to git clone
-   $ wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/kobuki_standalone.repos || exit 1
+   $ wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/kobuki_standalone.repos || exit 1
 
 Fetch the sources:
 
@@ -81,10 +81,10 @@ Build
    $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF
 
    # build a single package
-   $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF --package-select kobuki_dock_drive
+   $ colcon build --merge-install --packages-select kobuki_dock_drive --cmake-args -DBUILD_TESTING=OFF
    
    # build everything, verbosely
-   $ VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ -DBUILD_TESTING=OFF
+   $ VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
 
    # build release with debug symbols
    $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo
