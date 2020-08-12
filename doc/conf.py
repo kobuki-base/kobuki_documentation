@@ -297,4 +297,4 @@ pdf_fit_background_mode = 'scale'
 
 
 def setup(app):
-    app.add_stylesheet('hacks.css')
+    app.add_css_file('hacks.css')
