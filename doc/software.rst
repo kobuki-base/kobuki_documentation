@@ -7,8 +7,8 @@ Install from Binaries
 If you happen to have access to a binary install (e.g. ROS), follow their instructions and
 then proceed directly to :ref:`drive-section`.
 
-Install from Source
--------------------
+Build from Source
+-----------------
 
 Requirements
 ^^^^^^^^^^^^
@@ -132,8 +132,8 @@ for assistance.
 
 .. _drive-section:
 
-Take Kobuki for a Drive
------------------------
+Checking the Version Info
+-------------------------
 
 .. code-block:: bash
 
@@ -147,6 +147,14 @@ Take Kobuki for a Drive
      Firmware Version: 1.2.0
      Software Version: 1.1.0
      Unique Device ID: 97713968-842422349-1361404194
+
+Take Kobuki for a Test Drive
+----------------------------
+
+.. code-block:: bash
+
+   # drop into the runtime enviroment
+   $ source ./install/setup.bash
 
    # take kobuki for a test drive
    $ kobuki_simple_keyop
