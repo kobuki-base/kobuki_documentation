@@ -67,6 +67,6 @@ Contents
    :maxdepth: 1
    :caption: Reference
 
-   doxygen
+   Doxygen (C++ API) <https://kobuki-base.github.io/kobuki_core/>
    changelog
    glossary
