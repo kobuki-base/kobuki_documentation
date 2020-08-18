@@ -50,6 +50,7 @@ Hardware
 - Recharging Adapter: Input: 100-240V AC, 50/60Hz, 1.5A max; Output: 19V DC, 3.16A
 - Netbook recharging connector (only enabled when robot is recharging): 19V/2.1A DC
 - Docking IR Receiver: left, centre, right
+- USB Serial Converter: `FT232R <https://wwww.ftdichip.com/Products/ICs/FT232R.html>`_ chip from `FTDI <https://www.ftdichip.com/>`_
 
 Software
 --------
