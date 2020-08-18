@@ -21,7 +21,7 @@ The environment under which these instructions have been tested (and thus suppor
 * Build Dependencies: ament, colcon, vcstool, CMake
 * Code Dependencies: Eigen, Sophus, ECL
 
-Other options may work, but your mileage will vary. Windows has been supported in the past, so
+Other platforms may work, but your mileage will vary. Windows has been supported in the past, so
 if you're willing to do a bit of work, you might find success.
 
 Preparation
