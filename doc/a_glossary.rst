@@ -7,7 +7,7 @@ Glossary
 
 
    kobuki
-      kobuki [:kr:`거북이`] n. korean for turtle
+      kobuki: n. korean for turtle
 
    fsm
    flying spaghetti monster
