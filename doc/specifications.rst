@@ -31,7 +31,8 @@ Functional
 Hardware
 --------
 
-- PC Connection: USB or via RX/TX pins on the parallel port
+- PC Connection: USB / RS232 via RX/TX pins on the parallel port
+- USB Serial Converter: `FT232R <https://wwww.ftdichip.com/Products/ICs/FT232R.html>`_ chip from `FTDI <https://www.ftdichip.com/>`_
 - Motor Overload Detection: disables power on detecting high current (>3A)
 - Odometry: 52 ticks/enc rev, 2578.33 ticks/wheel rev, 11.7 ticks/mm
 - Gyro: factory calibrated, 1 axis (110 deg/s)
@@ -50,7 +51,11 @@ Hardware
 - Recharging Adapter: Input: 100-240V AC, 50/60Hz, 1.5A max; Output: 19V DC, 3.16A
 - Netbook recharging connector (only enabled when robot is recharging): 19V/2.1A DC
 - Docking IR Receiver: left, centre, right
-- USB Serial Converter: `FT232R <https://wwww.ftdichip.com/Products/ICs/FT232R.html>`_ chip from `FTDI <https://www.ftdichip.com/>`_
+
+Communication
+-------------
+
+- Baud rate: 115200 BPS, Data bit: 8 bit, Stop bit: 1 bit, No Parity
 
 Software
 --------

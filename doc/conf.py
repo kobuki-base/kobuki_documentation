@@ -96,10 +96,10 @@ pygments_style = 'sphinx'
 
 # Add a small piece of rST text in the prolog/epilog of EVERY file
 # http://www.sphinx-doc.org/en/stable/config.html#confval-rst_prolog
-# rst_prolog = """
-rst_epilog = """
+rst_prolog = """
 .. include:: colours.rst
 """
+# rst_epilog = """
 # FIXME : even the Markdown files (.md) use it... They should not!
 
 

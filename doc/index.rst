@@ -11,13 +11,16 @@ Contents
    out_of_the_box
    software
    applications
+   C++ API (Doxygen) <https://kobuki-base.github.io/kobuki_core/>
 
 .. toctree::
    :maxdepth: 1
    :caption: Kobuki Resources
 
-   anatomy
    specifications
+   anatomy
+   conversions
+   protocol
    firmware
    media
 
@@ -47,6 +50,5 @@ Contents
    :maxdepth: 1
    :caption: Reference
 
-   Doxygen (C++ API) <https://kobuki-base.github.io/kobuki_core/>
    changelog
-   a_glossary
+   glossary

@@ -3,12 +3,6 @@
 Firmware
 ========
 
-Communication
--------------
-
-- Baud rate: 115200 BPS, Data bit: 8 bit, Stop bit: 1 bit, No Parity
-- Electronic protocol: USB / RS232 (@ DB25 connector)
-
 Versioning
 ----------
 
