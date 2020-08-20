@@ -1,16 +1,22 @@
 Anatomy
 =======
 
-Top View
---------
+Views
+-----
+
+Top
+^^^
+
 .. image:: images/anatomy/top_view.jpg
 
-Bottom View
------------
+Bottom
+^^^^^^
+
 .. image:: images/anatomy/bottom_view.jpg
 
 Control Panel
--------------
+^^^^^^^^^^^^^
+
 .. image:: images/anatomy/control_panel.jpg
 
 - 19V/2A: Laptop power supply

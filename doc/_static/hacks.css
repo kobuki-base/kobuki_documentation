@@ -3,6 +3,11 @@
  * :copyright: Copyright 2013-2016 Lilian Besson
  * :license: GPLv3, see LICENSE for details.
  */
+/* Width */
+.wy-nav-content {
+  max-width: 1200px !important;
+}
+
 /* Colors and text decoration.
  For example, :black:`text in black` or :blink:`text blinking` in rST. */
 .black    { color:black; }
