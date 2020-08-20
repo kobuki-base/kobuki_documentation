@@ -5,7 +5,8 @@ Install from Binaries
 ---------------------
 
 If you happen to have access to a binary install (e.g. ROS), follow their instructions and
-then proceed directly to :ref:`drive-section`.
+then proceed directly to :ref:`drive-section`, otherwise follow the instructions below to
+build Kobuki and it's dependencies from source.
 
 Build from Source
 -----------------
