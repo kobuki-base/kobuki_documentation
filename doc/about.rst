@@ -1,4 +1,6 @@
 .. image:: images/logo_kobuki.png
+   :width: 300px
+   :align: center
 
 About
 =====
