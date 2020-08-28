@@ -96,6 +96,10 @@ The modified instructions for building:
 Other variations on the build step still hold as per the instructions
 in :ref:`Software - Build <build-section>`.
 
+These instructions are continuously vetted with a github action
+(`yaml <https://github.com/kobuki-base/kobuki_documentation/blob/devel/.github/workflows/weekly.yaml>`_,
+`results/logs <https://github.com/kobuki-base/kobuki_documentation/actions?query=workflow%3Abuild_sources>`_). 
+
 Using The Serial Port (!USB)
 ----------------------------
 

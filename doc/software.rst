@@ -104,6 +104,10 @@ Build
 
 The resulting headers, libraries and resources can be found under ``./install``.
 
+These instructions are continuously vetted with a github action
+(`yaml <https://github.com/kobuki-base/kobuki_documentation/blob/devel/.github/workflows/weekly.yaml>`_,
+`results/logs <https://github.com/kobuki-base/kobuki_documentation/actions?query=workflow%3Abuild_sources>`_). 
+
 Connect Kobuki
 --------------
 
