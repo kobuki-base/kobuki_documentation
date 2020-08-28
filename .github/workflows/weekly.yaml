@@ -4,8 +4,8 @@ name: build_sources
 on:
   workflow_dispatch:
   schedule:
-    # run at 4 AM UTC / Midnight Boston time
-    - cron: '0 4 * * *'
+    # run at 4 AM UTC / Midnight Boston time every Sunday
+    - cron: '0 4 * * 0'
 
 jobs:
   bionic:
@@ -14,10 +14,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    # - uses: actions/checkout@v2
+    - name: preparation
+      run: |
+        sudo apt install python3-venv
+        sudo apt install cmake
 
-    - name: devel
+    - name: fetch_devel
       run: |
         wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/venv.bash || exit 1
         cat venv.bash
@@ -28,18 +30,41 @@ jobs:
         wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/kobuki_standalone.repos || exit 1
         cat kobuki_standalone.repos
         echo "---------------------------------------------------------------------------"
-        sudo apt install python3-venv
-        sudo apt install cmake
         source venv.bash
         mkdir src
         vcs import ./src < kobuki_standalone.repos || exit 1
+        deactivate
+
+    - name: build_devel
+      run: |
+        source venv.bash
         VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
         deactivate
 
-    - name: cleanup
+    - name: clean_devel
       run: |
-        rm venv.bash kobuki_standalone.repos colcon.meta
-        rm -rf .venv src build install log
+        rm -rf build install log
+
+    - name: cross_devel
+      run: |
+        sudo apt install g++-arm-linux-gnueabihf
+        echo "---------------------------------------------------------------------------"
+        wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/devel/resources/arm-linux-gnueabihf.cmake || exit 1
+        cat arm-linux-gnueabihf.cmake
+        echo "---------------------------------------------------------------------------"
+        source venv.bash
+        export PATH=${PATH}:/usr/arm-linux-gnueabihf/bin
+        export CMAKE_ARGS="-DBUILD_TESTING=OFF --no-warn-unused-cli"
+        export CROSS_COMPILE_ARGS=-DCMAKE_TOOLCHAIN_FILE=`pwd`/arm-linux-gnueabihf.cmake
+        echo "export ${CMAKE_ARGS}"
+        echo "export ${CROSS_COMPILE_ARGS}"
+        echo "colcon build --merge-install --cmake-args ${CMAKE_ARGS} ${CROSS_COMPILE_ARGS}"
+        colcon build --merge-install --cmake-args ${CMAKE_ARGS} ${CROSS_COMPILE_ARGS}
+        deactivate
+
+    - name: pristine
+      run: |
+        rm -rf build install log src .venv venv.bash colcon.meta kobuki_standalone.repos arm-linux-gnueabihf.cmake
 
     - name: release/1.0.x
       run: |
@@ -52,8 +77,6 @@ jobs:
         wget https://raw.githubusercontent.com/kobuki-base/kobuki_documentation/release/1.0.x/resources/kobuki_standalone.repos || exit 1
         cat kobuki_standalone.repos
         echo "---------------------------------------------------------------------------"
-        sudo apt install python3-venv
-        sudo apt install cmake
         source venv.bash
         mkdir src
         vcs import ./src < kobuki_standalone.repos || exit 1
