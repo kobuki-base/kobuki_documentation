@@ -201,19 +201,29 @@ Pinouts
 Charging Profile
 ^^^^^^^^^^^^^^^^
 
-This plot shows the voltages as measured by the robot’s hardware. Both the standard 4S1P and the extra 4S2P batteries are compared. During the test, the robot was charging via adaptor.
+This plot shows the voltages as measured by the robot’s hardware. Both the standard
+4S1P and the extra 4S2P batteries are compared. During the test, the robot was charging
+via adaptor.
 
 .. image:: images/anatomy/battery_charging_profile.jpg
 
 Discharging Profile
 ^^^^^^^^^^^^^^^^^^^
 
-This plot shows the voltage as measured by the robot’s hardware. Both the standard 4S1P and the extra 4S2P batteries are compared. During the test, the robot was continuously spinning, with the Kinect camera running.
+This plot shows the voltage as measured by the robot’s hardware. Both the standard 4S1P
+and the extra 4S2P batteries are compared. During the test, the robot was continuously
+spinning, with the Kinect camera running.
 
 .. image:: images/anatomy/battery_discharging_profile.jpg
 
-Serial Port
------------
+.. _anatomy_expansion_port-section:
+
+Expansion Port
+--------------
+
+Pictured below are the pinouts of Kobuki’s expansion port, including the serial pins. 
+The minimum number of required pins for serial communication is three; TX, RX, and GND.
+Additionally EX3.3 or EX5 can be used for powering external devices, such as line transceiver.
 
 .. image:: images/anatomy/serial_port.jpg
 
