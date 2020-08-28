@@ -25,6 +25,8 @@ The environment under which these instructions have been tested (and thus suppor
 Other platforms may work, but your mileage will vary. Windows has been supported in the past, so
 if you're willing to do a bit of work, you might find success.
 
+.. _build2-section:
+
 Preparation
 ^^^^^^^^^^^
 
@@ -71,6 +73,8 @@ Fetch the sources:
 
       $ touch src/eigen/AMENT_IGNORE
 
+.. _build-section:
+
 Build
 ^^^^^
 
@@ -80,9 +84,12 @@ Build
 
    # build everything
    $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF
+   
+   # disable any unused cmake variable warnings (e.g. sophus doesn't use BUILD_TESTING)
+   $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF --no-warn-unused-cli
 
    # build a single package
-   $ colcon build --merge-install --packages-select kobuki_dock_drive --cmake-args -DBUILD_TESTING=OFF
+   $ colcon build --merge-install --packages-select kobuki_driver --cmake-args -DBUILD_TESTING=OFF
    
    # build everything, verbosely
    $ VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
