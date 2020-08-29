@@ -1,4 +1,4 @@
-.. _chapter_firmware:
+.. _firmware-section:
 
 Firmware
 ========

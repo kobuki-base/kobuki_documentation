@@ -160,6 +160,10 @@ Checking the Version Info
      Software Version: 1.1.0
      Unique Device ID: 97713968-842422349-1361404194
 
+Your driver may give you a warning (software or firmware upgrade advised) or error
+(incompatible firmware/software) about mismatching versions.
+If it's the firmware you need to upgrade, refer to the section on :ref:`firmware-section`. 
+
 Take Kobuki for a Test Drive
 ----------------------------
 
