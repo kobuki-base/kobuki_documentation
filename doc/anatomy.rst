@@ -44,16 +44,17 @@ Connectors
     2. The images on each page are representative of the series of connectors. Each series usually has a variety of connectors with a different number of pins. As a result, the pictures on some of the pages below may seem as though they have the incorrect number of pins, but do not worry about this – they are the correct links. Note that you can jump to different connectors in the series via the second part of their identification number (e.g. 43045-0224 for the 2-pin, 43045-0424 for the 4-pin).
     3. If some linked connectors are listed as obsolete on the molex website, don’t worry. The connector you are exactly requiring are those you can find under the ‘Mates with Parts’ link on each page. If these however should become obsolete as well, please let us know via email.
 
+.. _power-section:
 
 Power
 ^^^^^
 
 .. image:: images/anatomy/power_panel.jpg
 
-- 5V\@1A Molex PN : 43650-0218 – for custom boards
-- 12V\@1.5A : Molex PN : 43045-0224 – specially supporting the kinect
+- 5V\@1A Molex PN : 43650-0218 – for custom embedded boards (e.g. Arduino, Odroid)
+- 12V\@1.5A : Molex PN : 43045-0224 – for depth sensors (originally designed for Kinect/Asus sensors)
 - 12V\@5A : Molex PN : 3929-9023 – for high powered accessories (e.g. robotic arm)
-- 19V\@2A : Molex PN : 3928-9068 – for recharging netbooks
+- 19V\@2A : Molex PN : 3928-9068 – for recharging netbooks (with a modified adapter)
 
 Battery
 ^^^^^^^

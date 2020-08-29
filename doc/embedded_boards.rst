@@ -15,8 +15,8 @@ For a primer on CMake and how to define CMake toolchains, refer to the cmake man
 `cmake toolchains <https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html>`_.
 
 
-An Example
-^^^^^^^^^^
+Use Case - arm-linux-gnueabihf
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Preparation
 ...........
