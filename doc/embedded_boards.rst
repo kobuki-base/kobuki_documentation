@@ -1,5 +1,5 @@
-Working with Embedded Boards
-============================
+Embedded Boards
+===============
 
 Cross Compiling
 ---------------
@@ -104,10 +104,8 @@ Using The Serial Port (!USB)
 ----------------------------
 
 If your embedded board has a serial port rather than a USB, you're in luck, Kobuki has that too
-via it's expansion port.
-
-You most likely will have to wire your own cable. For correct pin-to-pin connections, refer to the
-diagrams in the anatomy section on the :ref:`anatomy_expansion_port-section`.
+via it's expansion port. You most likely will have to wire your own cable to make the
+correct pin-to-pin connections, as outlined in the section on the :ref:`anatomy_expansion_port-section`.
 
 Reproducing here for convenience:
 
