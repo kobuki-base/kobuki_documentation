@@ -89,12 +89,12 @@ Unique Device ID?
 
 Each Kobuki comes with a unique device ID imprinted on the FTDI chip
 at the factory. This can be retrieved with the
-:maroon:`kobuki_version_info` program that comes as part of the
+:maroon:`kobuki-version-info` program that comes as part of the
 :maroon:`kobuki_core` package.
 
 .. code-block:: bash
 
-   $ kobuki_version_info
+   $ kobuki-version-info
    Version Info:
      Hardware Version: 1.0.4
      Firmware Version: 1.2.0

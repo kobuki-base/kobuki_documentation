@@ -20,7 +20,7 @@ and hardware:
 
 .. code-block:: bash
 
-  $ kobuki_version_info
+  $ kobuki-version-info
     Version Info:
      * Hardware Version: 1.0.4
      * Firmware Version: 1.2.0
