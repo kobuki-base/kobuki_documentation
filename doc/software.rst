@@ -89,7 +89,7 @@ Build
    $ colcon build --merge-install --cmake-args -DBUILD_TESTING=OFF --no-warn-unused-cli
 
    # build a single package
-   $ colcon build --merge-install --packages-select kobuki_driver --cmake-args -DBUILD_TESTING=OFF
+   $ colcon build --merge-install --packages-select kobuki_core --cmake-args -DBUILD_TESTING=OFF
    
    # build everything, verbosely
    $ VERBOSE=1 colcon build --merge-install --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=OFF
