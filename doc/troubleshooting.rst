@@ -3,12 +3,10 @@
 Troubleshooting
 ===============
 
-asfd
-
 .. _troubleshooting-usb-section:
 
-The USB/FTDI Connection
------------------------
+No USB Port / No Data
+---------------------
 
 Kobuki's FTDI chip is flashed with a special identifier that allows programs to
 uniquely identify the device as a kobuki. This in turn allows for udev rules
@@ -86,8 +84,8 @@ You may not be in the correct group, try the following and logout/login (or rebo
 
    > sudo addgroup $(USER) dialout
 
-Kobuki's Unique Device ID?
---------------------------
+Unique Device ID?
+-----------------
 
 Each Kobuki comes with a unique device ID imprinted on the FTDI chip
 at the factory. This can be retrieved with the
