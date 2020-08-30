@@ -152,7 +152,7 @@ Checking the Version Info
    $ source ./install/setup.bash
    
    # who is your kobuki?
-   $ kobuki_version_info
+   $ kobuki-version-info
    Version Info:
      Hardware Version: 1.0.4
      Firmware Version: 1.2.0
@@ -172,7 +172,7 @@ Take Kobuki for a Test Drive
    $ source ./install/setup.bash
 
    # take kobuki for a test drive
-   $ kobuki_simple_keyop
+   $ kobuki-simple-keyop
    Simple Keyop : Utility for driving kobuki by keyboard.
    KobukiManager : using linear  vel step [0.05].
    KobukiManager : using linear  vel max  [1].
@@ -189,6 +189,3 @@ Take Kobuki for a Test Drive
    current pose: [0, 0, 0]
    current pose: [0.0064822, -1.17028e-06, -0.00074167]
    current pose: [0.0226873, -9.88246e-05, -0.0133501]
-
-
-.. _Dabit Wiki: https://github.com/dabit-industries/kobuki_wiki
