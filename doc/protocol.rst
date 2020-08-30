@@ -223,7 +223,7 @@ Play custom sounds with note and duration.
 .. note:: 
 
    This command is implemented on the kobuki with firmware, but not implemented yet in the c++ library
-   (kobuki_driver).
+   (kobuki_core).
 
 Sound Sequence
 ^^^^^^^^^^^^^^

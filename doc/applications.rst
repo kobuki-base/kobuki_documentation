@@ -55,7 +55,7 @@ Code
    #include <string>
    #include <ecl/time.hpp>
    #include <ecl/command_line.hpp>
-   #include <kobuki_driver/kobuki.hpp>
+   #include <kobuki_core/kobuki.hpp>
    
    class KobukiManager
    {
@@ -194,7 +194,7 @@ Code - Button Events
    #include <ecl/time.hpp>
    #include <ecl/sigslots.hpp>
    
-   #include <kobuki_driver/kobuki.hpp>
+   #include <kobuki_core/kobuki.hpp>
    
    class KobukiManager
    {
@@ -286,7 +286,7 @@ Code - The Sensor Stream
    #include <ecl/time.hpp>
    #include <ecl/sigslots.hpp>
    
-   #include <kobuki_driver/kobuki.hpp>
+   #include <kobuki_core/kobuki.hpp>
    
    class KobukiManager
    {
@@ -380,7 +380,7 @@ square with sides of length 1.0m.
    #include <ecl/geometry/legacy_pose2d.hpp>
    #include <ecl/linear_algebra.hpp>
    #include <ecl/command_line.hpp>
-   #include "kobuki_driver/kobuki.hpp"
+   #include "kobuki_core/kobuki.hpp"
    
    /*****************************************************************************
    ** Classes
