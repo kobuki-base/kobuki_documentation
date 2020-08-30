@@ -13,6 +13,7 @@ Contents
    out_of_the_box
    software
    applications
+   troubleshooting
    C++ API (Doxygen) <https://kobuki-base.github.io/kobuki_core/>
 
 .. toctree::
