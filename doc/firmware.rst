@@ -10,9 +10,35 @@ Firmware versions follow `semantic versioning`_ rules. The `c++ driver`_
 checks for compatibility between the software (i.e. driver) and firmware.
 Firmware versions are of the form M.m.p:
 
-- M(ajor) versions typically break protocol compatibility. When driver and firmware are incompatible, the driver will emit an error, suggest the required update and shutdown.
-- m(inor) versions add features, but the protocol will have not been modified. When driver and firmware are incompatible, the driver will emit a warning and suggest the required update, but continue working.
-- p(atch) versions provide minor bugfixes, but do not break driver or protocol compatibility.
+- **M(ajor)** versions typically break protocol compatibility. When software and firmware are incompatible, the software will emit an error, suggest the required update and shutdown.
+- **m(inor)** versions add features, but the protocol will have not been modified. Software and firmware will inter-operate, but warnings will be issued just-in-time when features are used that aren't supported by the connected firmware.
+- **p(atch)** versions provide minor bugfixes, but do not break driver or protocol compatibility.
+
+Additionally, the software maintains a list of recommended versions. Even if there is only a minor or patch
+version difference, it will give you a warning on connection and suggest the recommended firmware version
+to upgrade to. For example:
+
+.. code-block:: bash
+   
+   $ kobuki-simple-keyop 
+
+   Simple Keyop : Utility for driving kobuki by keyboard.
+
+   Reading from keyboard
+   ---------------------
+   Forward/back arrows : linear velocity incr/decr.
+   Right/left arrows : angular velocity incr/decr.
+   Spacebar : reset linear/angular velocities.
+   q : quit.
+   
+   [WARNING] The firmware does not match any of the recommended versions for this software.
+   [WARNING] Consider replacing the firmware. For more information,
+   [WARNING] refer to https://kobuki.readthedocs.io/en/devel/firmware.html.
+   [WARNING]  - Firmware Version: 1.1.3
+   [WARNING]  - Recommended Versions: 1.1.4 / 1.2.0
+
+   current pose: [x: 5.61871e-310, y: 1.57358e-314, heading: 6.90938e-310]
+   current pose: [x: 5.61871e-310, y: 1.57358e-314, heading: 6.90938e-310]
 
 The `c++ driver`_ provides a utility for checking the version that is running
 on your kobuki. It will also provide versioning information for the driver (software)
@@ -20,12 +46,12 @@ and hardware:
 
 .. code-block:: bash
 
-  $ kobuki-version-info
-    Version Info:
-     * Hardware Version: 1.0.4
-     * Firmware Version: 1.2.0
-     * Software Version: 1.0.0
-     * Unique Device ID: 97713968-842422349-1361404194
+   $ kobuki-version-info
+     Version Info:
+      * Hardware Version: 1.0.4
+      * Firmware Version: 1.2.0
+      * Software Version: 1.0.0
+      * Unique Device ID: 97713968-842422349-1361404194
 
 Additionally, firmware binaries come in three flavours:
 
