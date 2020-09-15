@@ -55,15 +55,14 @@ and hardware:
 
 Additionally, firmware binaries come in three flavours:
 
-* *latest*: most recent, but be aware that this version hasn't been tested much
-* *stable*: more recent than factory and reasonably well tested
-* *factory*: flashed onto the robots at the factory, has undergone stress testing
+* **latest**: most recent, but be aware that this version hasn't been tested much
+* **stable**: more recent than factory and reasonably well tested
+* **factory**: flashed onto the robots at the factory, has undergone stress testing
 
 These are identified by the trailing suffix on binary filenames stored in the
-`kobuki_firmware`_ repository.
-
-More details on the specific features / fixes provided by each version can be found
-in the kobuki firmware `CHANGELOG <https://github.com/kobuki-base/kobuki_firmware/blob/devel/CHANGELOG.rst>`_.
+`kobuki_firmware`_ repository. More details on the specific features / fixes
+provided by each version can be found in the kobuki
+firmware `CHANGELOG <https://github.com/kobuki-base/kobuki_firmware/blob/devel/CHANGELOG.rst>`_.
   
 .. _kobuki_firmware: https://github.com/kobuki-base/kobuki_firmware/tree/devel/firmware
 .. _c++ driver: https://github.com/kobuki-base/kobuki_core

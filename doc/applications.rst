@@ -353,6 +353,199 @@ Code - The Sensor Stream
      return 0;
    }
 
+Logging
+-------
+
+About
+^^^^^
+
+Kobuki provides loggers over the debug, info, warning and error signals. By
+default, the software wires up stdout loggers directly to the warning and error
+signals, but you can disable these and wire up slots to your own loggers.
+
+Code
+^^^^
+
+.. code-block:: c++
+   
+   #include <iostream>
+   #include <string>
+   #include <ecl/console.hpp>
+   #include <ecl/sigslots.hpp>
+   #include <ecl/time.hpp>
+   #include <ecl/command_line.hpp>
+   #include <kobuki_core/kobuki.hpp>
+   
+   class KobukiManager
+   {
+   public:
+     KobukiManager(const std::string &device) :
+       slot_debug(&KobukiManager::logCustomDebug, *this),
+       slot_info(&KobukiManager::logCustomInfo, *this),
+       slot_warning(&KobukiManager::logCustomWarning, *this),
+       slot_error(&KobukiManager::logCustomError, *this)
+     {
+       kobuki::Parameters parameters;
+   
+       parameters.device_port = device;
+       // Disable the default loggers
+       parameters.log_level = kobuki::LogLevel::NONE;
+   
+       // Wire them up ourselves
+       slot_debug.connect(parameters.sigslots_namespace + "/debug");
+       slot_info.connect(parameters.sigslots_namespace + "/info");
+       slot_warning.connect(parameters.sigslots_namespace + "/warning");
+       slot_error.connect(parameters.sigslots_namespace + "/error");
+   
+       try {
+         kobuki.init(parameters);
+       } catch (ecl::StandardException &e) {
+         std::cout << e.what();
+       }
+     }
+   
+     void logCustomDebug(const std::string& message) {
+       std::cout << ecl::green << "[DEBUG_WITH_COLANDERS] " << message << ecl::reset << std::endl;
+     }
+   
+     void logCustomInfo(const std::string& message) {
+       std::cout << "[INFO_WITH_COLANDERS] " << message << ecl::reset << std::endl;
+     }
+   
+     void logCustomWarning(const std::string& message) {
+       std::cout << ecl::yellow << "[WARNING_WITH_COLANDERS] " << message << ecl::reset << std::endl;
+     }
+   
+     void logCustomError(const std::string& message) {
+       std::cout << ecl::red << "[ERROR_WITH_COLANDERS] " << message << ecl::reset << std::endl;
+     }
+   
+   private:
+     kobuki::Kobuki kobuki;
+     ecl::Slot<const std::string&> slot_debug, slot_info, slot_warning, slot_error;
+   };
+   
+   int main(int argc, char **argv)
+   {
+     ecl::CmdLine cmd_line("logging", ' ', "0.3");
+     ecl::ValueArg<std::string> device_port(
+         "p", "port",
+         "Path to device file of serial port to open",
+         false,
+         "/dev/kobuki",
+         "string"
+     );
+     cmd_line.add(device_port);
+     cmd_line.parse(argc, argv);
+   
+     std::cout << ecl::bold << "\nLogging Demo\n" << ecl::reset << std::endl;
+   
+     KobukiManager kobuki_manager(device_port.getValue());
+     ecl::Sleep()(5);
+     return 0;
+   }
+
+Output
+^^^^^^
+
+.. code-block:: bash
+
+   Logging Demo
+   
+   [DEBUG_WITH_COLANDERS] Serial connection opened.
+   [DEBUG_WITH_COLANDERS] Serial connection opened, but not yet receiving data.
+   [DEBUG_WITH_COLANDERS] Serial connection opened, but not yet receiving data.
+   [DEBUG_WITH_COLANDERS] First data received.
+   [INFO_WITH_COLANDERS] Version info - Hardware: 1.0.4. Firmware: 1.2.0
+
+Debugging the Stream
+--------------------
+
+About
+^^^^^
+
+If you're having troubles with your connection and need to debug the raw data stream,
+tune into the :grey:`/kobuki/raw_data_stream` signal.
+
+Code
+^^^^
+
+.. code-block:: bash
+
+   #include <iostream>
+   #include <string>
+   #include <ecl/console.hpp>
+   #include <ecl/sigslots.hpp>
+   #include <ecl/time.hpp>
+   #include <ecl/command_line.hpp>
+   #include <kobuki_core/kobuki.hpp>
+   
+   class KobukiManager
+   {
+   public:
+     KobukiManager(const std::string &device) :
+       slot_raw_data_stream(&KobukiManager::logRawDataStream, *this)
+     {
+       kobuki::Parameters parameters;
+   
+       parameters.device_port = device;
+   
+       slot_raw_data_stream.connect(parameters.sigslots_namespace + "/raw_data_stream");
+   
+       try {
+         kobuki.init(parameters);
+       } catch (ecl::StandardException &e) {
+         std::cout << e.what();
+       }
+     }
+   
+     void logRawDataStream(kobuki::PacketFinder::BufferType& buffer) {
+       std::ostringstream ostream;
+       ostream << ecl::cyan << "[" << ecl::TimeStamp() << "] " << ecl::yellow;
+       ostream << std::setfill('0') << std::uppercase;
+       for (unsigned int i = 0; i < buffer.size(); i++) {
+         ostream << std::hex << std::setw(2) << static_cast<unsigned int>(buffer[i]) << " " << std::dec;
+       }
+       ostream << ecl::reset;
+       std::cout << ostream.str() << std::endl;
+     }
+   
+   private:
+     kobuki::Kobuki kobuki;
+     ecl::Slot<kobuki::PacketFinder::BufferType&> slot_raw_data_stream;
+   };
+   
+   int main(int argc, char **argv)
+   {
+     ecl::CmdLine cmd_line("raw_data_stream", ' ', "0.3");
+     ecl::ValueArg<std::string> device_port(
+         "p", "port",
+         "Path to device file of serial port to open",
+         false,
+         "/dev/kobuki",
+         "string"
+     );
+     cmd_line.add(device_port);
+     cmd_line.parse(argc, argv);
+   
+     std::cout << ecl::bold << "\nRaw Data Stream Demo\n" << ecl::reset << std::endl;
+   
+     KobukiManager kobuki_manager(device_port.getValue());
+     ecl::Sleep()(5);
+     return 0;
+   }
+
+Output
+^^^^^^
+
+.. code-block:: bash
+
+   Raw Data Stream Demo
+
+   [50256.007289812] AA 55 4D 01 0F 38 AD 00 00 00 00 00 00 00 00 00 00 12 A2 00 03 03 00 00 00 04 07 00 00 00 00 00 00 00 05 06 0D 07 BB 07 27 07 06 02 00 00 0D 0E ED 06 6B FF 1C 00 F9 FF 67 FF 15 00 F3 FF 10 10 0F 00 FF 0F FF 0F FB 0F FF 0F F0 0F 00 00 00 00 E7 
+   [50256.027284334] AA 55 4D 01 0F 4C AD 00 00 00 00 00 00 00 00 00 00 12 A2 00 03 03 00 00 00 04 07 00 00 00 00 00 00 00 05 06 FF 06 BB 07 31 07 06 02 00 00 0D 0E EF 06 61 FF 0C 00 F1 FF 60 FF 0E 00 F4 FF 10 10 0F 00 FF 0F FF 0F FF 0F FF 0F ED 0F 00 00 00 00 64 
+   [50256.047180298] AA 55 4D 01 0F 60 AD 00 00 00 00 00 00 00 00 00 00 12 A2 00 03 03 00 00 00 04 07 00 00 00 00 00 00 00 05 06 FE 06 BA 07 31 07 06 02 00 00 0D 0E F1 06 67 FF 1B 00 FB FF 70 FF 28 00 03 00 10 10 0F 00 FF 0F FF 0F FB 0F FF 0F EE 0F 00 00 00 00 74
+
 A Simple Control Loop
 ---------------------
 
@@ -525,7 +718,7 @@ Decoupling the Control
 ^^^^^^^^^^^^^^^^^^^^^^
 
 This program relied on the periodic sensor stream to trigger the
-control commands. This coupling results in a loop with the fewest
+control commands. This results in a loop with the fewest
 lines of code as well as minimum latency between pose update and
 control.
 
