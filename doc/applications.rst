@@ -353,6 +353,187 @@ Code - The Sensor Stream
      return 0;
    }
 
+A Simple Control Loop
+---------------------
+
+About
+^^^^^
+
+This example demonstrates how to process kobuki's pose data
+and based on the current pose, computes and sends the
+appropriate wheel commands to the robot, i.e. it closes the loop
+between sensing and control.
+
+Code
+^^^^
+
+Engage and watch Kobuki move around a dead-reckoned
+square with sides of length 1.0m.
+
+.. code-block:: c++
+
+   #include <string>
+   #include <csignal>
+   #include <ecl/geometry.hpp>
+   #include <ecl/time.hpp>
+   #include <ecl/sigslots.hpp>
+   #include <ecl/linear_algebra.hpp>
+   #include <ecl/command_line.hpp>
+   #include "kobuki_core/kobuki.hpp"
+
+
+   /*****************************************************************************
+   ** Classes
+   *****************************************************************************/
+
+   class KobukiManager {
+   public:
+     KobukiManager(
+         const std::string & device,
+         const double &length,
+         const bool &disable_smoothing
+     ) :
+       dx(0.0), dth(0.0),
+       length(length),
+       slot_stream_data(&KobukiManager::processStreamData, *this)
+     {
+       kobuki::Parameters parameters;
+       parameters.sigslots_namespace = "/kobuki";
+       parameters.device_port = device;
+       parameters.enable_acceleration_limiter = !disable_smoothing;
+
+       kobuki.init(parameters);
+       kobuki.enable();
+       slot_stream_data.connect("/kobuki/stream_data");
+     }
+
+     ~KobukiManager() {
+       kobuki.setBaseControl(0,0); // linear_velocity, angular_velocity in (m/s), (rad/s)
+       kobuki.disable();
+     }
+
+     void processStreamData() {
+       ecl::linear_algebra::Vector3d pose_update;
+       ecl::linear_algebra::Vector3d pose_update_rates;
+       kobuki.updateOdometry(pose_update, pose_update_rates);
+       ecl::concatenate_poses(pose, pose_update);
+       dx += pose_update[0];   // x
+       dth += pose_update[2];  // heading
+       // std::cout << dx << ", " << dth << std::endl;
+       // std::cout << kobuki.getHeading() << ", " << pose.heading() << std::endl;
+       // std::cout << "[" << pose[0] << ", " << pose.y() << ", " << pose.heading() << "]" << std::endl;
+       processMotion();
+     }
+
+     // Generate square motion
+     void processMotion() {
+       const double buffer = 0.05;
+       double longitudinal_velocity = 0.0;
+       double rotational_velocity = 0.0;
+       if (dx >= (length) && dth >= ecl::pi/2.0) {
+         std::cout << "[Z] ";
+         dx=0.0; dth=0.0;
+       } else if (dx >= (length + buffer)) {
+         std::cout << "[R] ";
+         rotational_velocity = 1.1;
+       } else {
+         std::cout << "[L] ";
+         longitudinal_velocity = 0.3;
+       }
+       std::cout << "[dx: " << dx << "][dth: " << dth << "][" << pose[0] << ", " << pose[1] << ", " << pose[2] << "]" << std::endl;
+       kobuki.setBaseControl(longitudinal_velocity, rotational_velocity);
+     }
+
+     const ecl::linear_algebra::Vector3d& getPose() {
+       return pose;
+     }
+
+   private:
+     double dx, dth;
+     const double length;
+     ecl::linear_algebra::Vector3d pose;  // x, y, heading
+     kobuki::Kobuki kobuki;
+     ecl::Slot<> slot_stream_data;
+   };
+
+   /*****************************************************************************
+   ** Signal Handler
+   *****************************************************************************/
+
+   bool shutdown_req = false;
+   void signalHandler(int /* signum */) {
+     shutdown_req = true;
+   }
+
+   /*****************************************************************************
+   ** Main
+   *****************************************************************************/
+
+   int main(int argc, char** argv)
+   {
+     ecl::CmdLine cmd_line("Uses a simple control loop to move Kobuki around a dead-reckoned square with sides of length 1.0m", ' ', "0.2");
+     ecl::ValueArg<std::string> device_port(
+         "p", "port",
+         "Path to device file of serial port to open",
+         false,
+         "/dev/kobuki",
+         "string"
+     );
+     ecl::ValueArg<double> length(
+         "l", "length",
+         "traverse square with sides of this size in length (m)",
+         false,
+         0.25,
+         "double"
+     );
+     ecl::SwitchArg disable_smoothing(
+         "d", "disable_smoothing",
+         "Disable the acceleration limiter (smoothens velocity)",
+         false
+     );
+
+     cmd_line.add(device_port);
+     cmd_line.add(length);
+     cmd_line.add(disable_smoothing);
+     cmd_line.parse(argc, argv);
+
+     signal(SIGINT, signalHandler);
+
+     std::cout << "Demo : Example of simple control loop." << std::endl;
+     KobukiManager kobuki_manager(
+         device_port.getValue(),
+         length.getValue(),
+         disable_smoothing.getValue()
+     );
+   
+     ecl::Sleep sleep(1);
+     ecl::linear_algebra::Vector3d pose;  // x, y, heading
+     try {
+       while (!shutdown_req){
+         sleep();
+         pose = kobuki_manager.getPose();
+         // std::cout << "current pose: [" << pose[0] << ", " << pose[1] << ", " << pose[2] << "]" << std::endl;
+       }
+     } catch ( ecl::StandardException &e ) {
+       std::cout << e.what();
+     }
+     return 0;
+   }
+
+Decoupling the Control
+^^^^^^^^^^^^^^^^^^^^^^
+
+This program relied on the periodic sensor stream to trigger the
+control commands. This results in a loop with the fewest
+lines of code as well as minimum latency between pose update and
+control.
+
+Alternatively, you may wish to decopule the control from the
+sensor stream callback (e.g. via the :maroon:`spin()` method). That
+is also fine and usual in more complex use cases. Beware however, of
+concurrency issues if using a separate thread.
+
+
 Logging
 -------
 
@@ -361,10 +542,59 @@ About
 
 Kobuki provides loggers over the debug, info, warning and error signals. By
 default, the software wires up stdout loggers directly to the warning and error
-signals, but you can disable these and wire up slots to your own loggers.
+signals, but you can both change this log level (e.g. DEBUG will cause all
+log levels to be printed to stdout) OR disable them complately and wire up slots
+to your own loggers.
 
-Code
-^^^^
+Code - Log Levels
+^^^^^^^^^^^^^^^^^
+
+.. code-block:: c++
+   
+   #include <iostream>
+   #include <string>
+   #include <ecl/console.hpp>
+   #include <ecl/time.hpp>
+   #include <ecl/command_line.hpp>
+   #include <kobuki_core/kobuki.hpp>
+   
+   int main(int argc, char **argv)
+   {
+     ecl::CmdLine cmd_line("log_levels", ' ', "0.1");
+     ecl::ValueArg<std::string> device_port(
+         "p", "port",
+         "Path to device file of serial port to open",
+         false,
+         "/dev/kobuki",
+         "string"
+     );
+     cmd_line.add(device_port);
+     cmd_line.parse(argc, argv);
+   
+     std::cout << ecl::bold << "\nLog Levels Demo\n" << ecl::reset << std::endl;
+   
+     kobuki::Parameters parameters;
+     parameters.device_port = device_port.getValue();
+     parameters.log_level = kobuki::LogLevel::DEBUG;
+   
+     kobuki::Kobuki kobuki;
+     try {
+       kobuki.init(parameters);
+     } catch (ecl::StandardException &e) {
+       std::cout << e.what();
+     }
+   
+     ecl::Sleep()(5);
+     return 0;
+   }
+
+Output - Log Levels
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: images/demo_log_levels.png
+
+Code - Custom Loggers
+^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: c++
    
@@ -445,18 +675,10 @@ Code
      return 0;
    }
 
-Output
-^^^^^^
+Output - Custom Loggers
+^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: bash
-
-   Logging Demo
-   
-   [DEBUG_WITH_COLANDERS] Serial connection opened.
-   [DEBUG_WITH_COLANDERS] Serial connection opened, but not yet receiving data.
-   [DEBUG_WITH_COLANDERS] Serial connection opened, but not yet receiving data.
-   [DEBUG_WITH_COLANDERS] First data received.
-   [INFO_WITH_COLANDERS] Version info - Hardware: 1.0.4. Firmware: 1.2.0
+.. image:: images/demo_custom_logging.png
 
 Debugging the Stream
 --------------------
@@ -538,191 +760,4 @@ Code
 Output
 ^^^^^^
 
-.. code-block:: bash
-
-   Raw Data Stream Demo
-
-   [50256.007289812] AA 55 4D 01 0F 38 AD 00 00 00 00 00 00 00 00 00 00 12 A2 00 03 03 00 00 00 04 07 00 00 00 00 00 00 00 05 06 0D 07 BB 07 27 07 06 02 00 00 0D 0E ED 06 6B FF 1C 00 F9 FF 67 FF 15 00 F3 FF 10 10 0F 00 FF 0F FF 0F FB 0F FF 0F F0 0F 00 00 00 00 E7 
-   [50256.027284334] AA 55 4D 01 0F 4C AD 00 00 00 00 00 00 00 00 00 00 12 A2 00 03 03 00 00 00 04 07 00 00 00 00 00 00 00 05 06 FF 06 BB 07 31 07 06 02 00 00 0D 0E EF 06 61 FF 0C 00 F1 FF 60 FF 0E 00 F4 FF 10 10 0F 00 FF 0F FF 0F FF 0F FF 0F ED 0F 00 00 00 00 64 
-   [50256.047180298] AA 55 4D 01 0F 60 AD 00 00 00 00 00 00 00 00 00 00 12 A2 00 03 03 00 00 00 04 07 00 00 00 00 00 00 00 05 06 FE 06 BA 07 31 07 06 02 00 00 0D 0E F1 06 67 FF 1B 00 FB FF 70 FF 28 00 03 00 10 10 0F 00 FF 0F FF 0F FB 0F FF 0F EE 0F 00 00 00 00 74
-
-A Simple Control Loop
----------------------
-
-About
-^^^^^
-
-This example demonstrates how to process kobuki's pose data
-and based on the current pose, computes and sends the
-appropriate wheel commands to the robot, i.e. it closes the loop
-between sensing and control.
-
-Code
-^^^^
-
-Engage and watch Kobuki move around a dead-reckoned
-square with sides of length 1.0m.
-
-.. code-block:: c++
-
-   #include <string>
-   
-   #include <csignal>
-   #include <ecl/geometry.hpp>
-   #include <ecl/time.hpp>
-   #include <ecl/sigslots.hpp>
-   #include <ecl/linear_algebra.hpp>
-   #include <ecl/command_line.hpp>
-   #include "kobuki_core/kobuki.hpp"
-   
-   
-   /*****************************************************************************
-   ** Classes
-   *****************************************************************************/
-   
-   class KobukiManager {
-   public:
-     KobukiManager(
-         const std::string & device,
-         const double &length,
-         const bool &disable_smoothing
-     ) :
-       dx(0.0), dth(0.0),
-       length(length),
-       slot_stream_data(&KobukiManager::processStreamData, *this)
-     {
-       kobuki::Parameters parameters;
-       parameters.sigslots_namespace = "/kobuki";
-       parameters.device_port = device;
-       parameters.enable_acceleration_limiter = !disable_smoothing;
-   
-       kobuki.init(parameters);
-       kobuki.enable();
-       slot_stream_data.connect("/kobuki/stream_data");
-     }
-   
-     ~KobukiManager() {
-       kobuki.setBaseControl(0,0); // linear_velocity, angular_velocity in (m/s), (rad/s)
-       kobuki.disable();
-     }
-   
-     void processStreamData() {
-       ecl::linear_algebra::Vector3d pose_update;
-       ecl::linear_algebra::Vector3d pose_update_rates;
-       kobuki.updateOdometry(pose_update, pose_update_rates);
-       ecl::concatenate_poses(pose, pose_update);
-       dx += pose_update[0];   // x
-       dth += pose_update[2];  // heading
-       // std::cout << dx << ", " << dth << std::endl;
-       // std::cout << kobuki.getHeading() << ", " << pose.heading() << std::endl;
-       // std::cout << "[" << pose[0] << ", " << pose.y() << ", " << pose.heading() << "]" << std::endl;
-       processMotion();
-     }
-   
-     // Generate square motion
-     void processMotion() {
-       const double buffer = 0.05;
-       double longitudinal_velocity = 0.0;
-       double rotational_velocity = 0.0;
-       if (dx >= (length) && dth >= ecl::pi/2.0) {
-         std::cout << "[Z] ";
-         dx=0.0; dth=0.0;
-       } else if (dx >= (length + buffer)) {
-         std::cout << "[R] ";
-         rotational_velocity = 1.1;
-       } else {
-         std::cout << "[L] ";
-         longitudinal_velocity = 0.3;
-       }
-       std::cout << "[dx: " << dx << "][dth: " << dth << "][" << pose[0] << ", " << pose[1] << ", " << pose[2] << "]" << std::endl;
-       kobuki.setBaseControl(longitudinal_velocity, rotational_velocity);
-     }
-   
-     const ecl::linear_algebra::Vector3d& getPose() {
-       return pose;
-     }
-   
-   private:
-     double dx, dth;
-     const double length;
-     ecl::linear_algebra::Vector3d pose;  // x, y, heading
-     kobuki::Kobuki kobuki;
-     ecl::Slot<> slot_stream_data;
-   };
-   
-   /*****************************************************************************
-   ** Signal Handler
-   *****************************************************************************/
-   
-   bool shutdown_req = false;
-   void signalHandler(int /* signum */) {
-     shutdown_req = true;
-   }
-   
-   /*****************************************************************************
-   ** Main
-   *****************************************************************************/
-   
-   int main(int argc, char** argv)
-   {
-     ecl::CmdLine cmd_line("Uses a simple control loop to move Kobuki around a dead-reckoned square with sides of length 1.0m", ' ', "0.2");
-     ecl::ValueArg<std::string> device_port(
-         "p", "port",
-         "Path to device file of serial port to open",
-         false,
-         "/dev/kobuki",
-         "string"
-     );
-     ecl::ValueArg<double> length(
-         "l", "length",
-         "traverse square with sides of this size in length (m)",
-         false,
-         0.25,
-         "double"
-     );
-     ecl::SwitchArg disable_smoothing(
-         "d", "disable_smoothing",
-         "Disable the acceleration limiter (smoothens velocity)",
-         false
-     );
-   
-     cmd_line.add(device_port);
-     cmd_line.add(length);
-     cmd_line.add(disable_smoothing);
-     cmd_line.parse(argc, argv);
-   
-     signal(SIGINT, signalHandler);
-   
-     std::cout << "Demo : Example of simple control loop." << std::endl;
-     KobukiManager kobuki_manager(
-         device_port.getValue(),
-         length.getValue(),
-         disable_smoothing.getValue()
-     );
-   
-     ecl::Sleep sleep(1);
-     ecl::linear_algebra::Vector3d pose;  // x, y, heading
-     try {
-       while (!shutdown_req){
-         sleep();
-         pose = kobuki_manager.getPose();
-         // std::cout << "current pose: [" << pose[0] << ", " << pose[1] << ", " << pose[2] << "]" << std::endl;
-       }
-     } catch ( ecl::StandardException &e ) {
-       std::cout << e.what();
-     }
-     return 0;
-   }
-
-Decoupling the Control
-^^^^^^^^^^^^^^^^^^^^^^
-
-This program relied on the periodic sensor stream to trigger the
-control commands. This results in a loop with the fewest
-lines of code as well as minimum latency between pose update and
-control.
-
-Alternatively, you may wish to decopule the control from the
-sensor stream callback (e.g. via the :maroon:`spin()` method). That
-is also fine and usual in more complex use cases. Beware however, of
-concurrency issues if using a separate thread.
+.. image:: images/demo_raw_data_stream.png
