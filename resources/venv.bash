@@ -80,8 +80,7 @@ pretty_header "PyPi Dependencies"
 pip3 install wheel
 pip3 install setuptools==45.2.0
 pip3 install vcstool==0.2.14
-pip3 install colcon-core==0.6.0
-pip3 install colcon-common-extensions==0.2.1
+pip3 install colcon-common-extensions==0.2.1  # this will fetch the appropriate version of colcon-core as well
 
 echo ""
 echo "Leave the virtual environment with 'deactivate'"
